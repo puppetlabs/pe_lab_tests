@@ -4,7 +4,6 @@
 .yardoc
 .yardwarns
 *.iml
-/.bundle/
 /.idea/
 /.vagrant/
 /coverage/
@@ -48,7 +47,6 @@ coverage/*
 
 # Third-party
 vendor/*
-.bundle/*
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
