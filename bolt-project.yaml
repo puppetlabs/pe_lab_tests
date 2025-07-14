@@ -1,0 +1,5 @@
+# bolt-project.yaml
+analytics: false
+color: true
+name: pe_lab_tests
+modules: []
