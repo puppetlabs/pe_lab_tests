@@ -1,0 +1,61 @@
+.git/
+.*.sw[op]
+.metadata
+.yardoc
+.yardwarns
+*.iml
+/.bundle/
+/.idea/
+/.vagrant/
+/coverage/
+/bin/
+/doc/
+/Gemfile.local
+/Gemfile.lock
+/junit/
+/log/
+/pkg/
+/spec/fixtures/manifests/
+/spec/fixtures/modules/*
+/tmp/
+/vendor/
+/.vendor/
+/convert_report.txt
+/update_report.txt
+.DS_Store
+.project
+.envrc
+/inventory.yaml
+/spec/fixtures/litmus_inventory.yaml
+.resource_types
+.modules
+.task_cache.json
+.plan_cache.json
+.rerun.json
+bolt-debug.log
+# gitignore template for Puppet modules
+# website: https://forge.puppet.com/
+
+# Built packages
+pkg/*
+
+# Should run on multiple platforms so don't check in
+Gemfile.lock
+
+# Tests
+spec/fixtures/*
+coverage/*
+
+# Third-party
+vendor/*
+.bundle/*
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+!*.code-workspace
+
+# Built Visual Studio Code Extensions
+*.vsix
