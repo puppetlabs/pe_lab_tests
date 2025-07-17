@@ -12,6 +12,8 @@ require 'spec_helper_local' if File.file?(File.join(File.dirname(__FILE__), 'spe
 
 include RspecPuppetFacts
 
+set :backend, :exec
+
 default_facts = {
   puppetversion: Puppet.version,
   facterversion: Facter.version,
