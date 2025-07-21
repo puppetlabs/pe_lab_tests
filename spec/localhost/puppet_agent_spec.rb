@@ -17,7 +17,7 @@ describe 'Puppet Agent node' do
     let(:puppet_cert) { PuppetCert.new }
 
     it 'is valid' do
-      expect(puppet_cert.get_certificate.is_valid?).to be true
+      expect(puppet_cert.is_valid?).to be true
     end
   end
 end
