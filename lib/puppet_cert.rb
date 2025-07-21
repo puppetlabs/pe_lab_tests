@@ -14,7 +14,7 @@ class PuppetCert
     raise "Certificate file #{@filename} does not exist" unless File.exist?(@filename)
     raise "Certificate file #{@filename} is not readable" unless File.readable?(@filename)
     raise "Certificate file #{@filename} is empty" unless File.size?(@filename) > 0
-    @certificate = OpenSSL::X509::Certificate.new(File.read(File.join(CERT_DIR, @filename)))
+    @certificate = OpenSSL::X509::Certificate.new(File.read(@filename))
   end
 
   def get_filename
