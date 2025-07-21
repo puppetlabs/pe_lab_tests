@@ -12,6 +12,10 @@ require 'spec_helper_local' if File.file?(File.join(File.dirname(__FILE__), 'spe
 
 include RspecPuppetFacts
 
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require_relative '../lib/puppet_cert.rb'
+
 set :backend, :exec
 
 default_facts = {
