@@ -10,6 +10,7 @@ class PuppetCert
   @certificate = nil; # OpenSSL::X509::Certificate
 
   def initialize
+    raise "Directory #{CERT_DIR} does not exist" unless Dir.exist?(CERT_DIR)
     @filename = get_filename  
     raise "Certificate file #{@filename} does not exist" unless File.exist?(@filename)
     raise "Certificate file #{@filename} is not readable" unless File.readable?(@filename)
