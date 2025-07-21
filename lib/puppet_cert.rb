@@ -18,11 +18,15 @@ class PuppetCert
   end
 
   def get_filename
-    hostname = exec('hostname -f').strip.downcase
+    hostname = `hostname -f`.strip.downcase
     return CERT_DIR + "#{hostname}.pem"
   end
 
   def get_certificate
     return @certificate
+  end
+
+  def is_valid?
+    return @certificate.not_before < Time.now && @certificate.not_after > Time.now
   end
 end

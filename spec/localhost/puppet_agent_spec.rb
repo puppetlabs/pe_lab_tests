@@ -2,20 +2,22 @@
 
 require 'spec_helper'
 
-describe package('puppet-agent') do
-  it { should be_installed }
-end
+describe 'Puppet Agent node' do
 
-describe service('puppet') do
-  it { should be_enabled }
-  it { should be_running }
-end
-
-describe 'PuppetCert' do
-  let(:puppet_cert) { PuppetCert.new }
-
-  describe x509certificate(puppet_cert.get_certificate) do
-    it { should be_valid }
+  describe package('puppet-agent') do
+    it { should be_installed }
   end
 
+  describe service('puppet') do
+    it { should be_enabled }
+    it { should be_running }
+  end
+
+  describe 'Puppet Agent certificate' do
+    let(:puppet_cert) { PuppetCert.new }
+
+    it 'is valid' do
+      expect(puppet_cert.get_certificate.is_valid?).to be true
+    end
+  end
 end
