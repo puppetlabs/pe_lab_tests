@@ -12,10 +12,6 @@ describe 'Development Environment node' do
     it { should be_installed }
   end
 
-  describe package('git') do
-    it { should be_installed }
-  end
-
   describe package('xrdp') do
     it { should be_installed }
   end
@@ -27,5 +23,10 @@ describe 'Development Environment node' do
 
   describe file('/etc/xrdp/xrdp.ini') do
     it { should be_file }
+  end
+
+  describe 'git' do
+    it 'is installed' do
+    end
   end
 end
