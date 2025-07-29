@@ -48,7 +48,10 @@ plan pe_lab_tests::run_server_spec (
 
   # Copy the entire project to target servers
   out::message('Step 3: Copying project files...')
-  upload_file($project_source, $project_dest, $targets, {
+  run_command("rm -rf ${project_dest}/*", $targets, {
+      '_run_as' => 'root'
+  })
+  upload_file("${project_source}/*", $project_dest, $targets, {
       '_run_as' => 'root'
   })
 
