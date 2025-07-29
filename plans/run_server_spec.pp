@@ -28,7 +28,7 @@ plan pe_lab_tests::run_server_spec (
   $project_source = system::env('PWD')
 
   # Set the project destination directory
-  $project_dest = "/home/${effective_user}/"
+  $project_dest = "/home/${effective_user}"
 
   out::message("Running server spec: ${spec_file}")
   out::message("Ruby version: ${ruby_version}")
