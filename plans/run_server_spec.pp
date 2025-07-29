@@ -41,6 +41,9 @@ plan pe_lab_tests::run_server_spec (
   # Step 3: Set ownership if user specified
   if $user {
     run_command("sudo chown -R ${user}:${user} ${project_dest}", $targets)
+  } else {
+    $user = system::env('USER')
+    run_command("sudo chown -R ${user}:${user} ${project_dest}", $targets)
   }
 
   # Step 4: Copy the entire project to target servers
