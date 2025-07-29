@@ -42,15 +42,15 @@ plan pe_lab_tests::run_server_spec (
 
   # Create destination directory  
   out::message('Step 2: Creating project directory...')
+  run_command("rm -rf ${project_dest}/*", $targets, {
+      '_run_as' => 'root'
+  })
   run_command("mkdir -p ${project_dest}", $targets, {
       '_run_as' => 'root'
   })
 
   # Copy the entire project to target servers
   out::message('Step 3: Copying project files...')
-  run_command("rm -rf ${project_dest}/*", $targets, {
-      '_run_as' => 'root'
-  })
   upload_file("${project_source}/*", $project_dest, $targets, {
       '_run_as' => 'root'
   })
