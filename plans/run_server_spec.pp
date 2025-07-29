@@ -30,7 +30,7 @@ plan pe_lab_tests::run_server_spec (
 
   # Step 1: Install Ruby using our custom task
   out::message("Step 1: Installing Ruby ${ruby_version}...")
-  run_task('install_ruby', $targets, {
+  run_task('pe_lab_tests::install_ruby', $targets, {
     'ruby_version' => $ruby_version
   })
 
