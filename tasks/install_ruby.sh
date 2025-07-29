@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Copyright 2025. Puppet, Inc., a Perforce company.  
+
 # Get Ruby version from parameter
 RUBY_VERSION=$PT_ruby_version
 echo "Installing Ruby version: $RUBY_VERSION"
