@@ -38,6 +38,12 @@ plan pe_lab_tests::run_server_spec (
   out::message('Step 2: Creating project directory...')
   run_command("sudo mkdir -p ${project_dest}", $targets)
 
+  # Step 4: Copy the entire project to target servers
+  out::message('Step 3: Copying project files...')
+  upload_file($project_source, $project_dest, $targets, {
+    '_run_as' => 'root'
+  })
+
   # Step 3: Set ownership if user specified
   if $user {
     run_command("sudo chown -R ${user}:${user} ${project_dest}", $targets)
@@ -45,12 +51,6 @@ plan pe_lab_tests::run_server_spec (
     $user = system::env('USER')
     run_command("sudo chown -R ${user}:${user} ${project_dest}", $targets)
   }
-
-  # Step 4: Copy the entire project to target servers
-  out::message('Step 3: Copying project files...')
-  upload_file($project_source, $project_dest, $targets, {
-    '_run_as' => $user
-  })
 
   # Step 5: Install project dependencies
   out::message('Step 4: Installing project dependencies...')
