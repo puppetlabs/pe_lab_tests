@@ -28,39 +28,44 @@ plan pe_lab_tests::run_server_spec (
   out::message("Ruby version: ${ruby_version}")
   out::message("Project destination: ${project_dest}")
 
-  # Step 1: Install Ruby using our custom task
+  # Install Ruby using our custom task
   out::message("Step 1: Installing Ruby ${ruby_version}...")
   run_task('pe_lab_tests::install_ruby', $targets, {
-    'ruby_version' => $ruby_version
+      'ruby_version' => $ruby_version
   })
 
-  # Step 2: Determine effective user
-  if $user {
-    $effective_user = $user
-  } else {
-    $effective_user = system::env('USER')
+  # Determine effective user
+  $effective_user = $user ? {
+    undef   => system::env('USER'),
+    default => $user
   }
 
-  # Step 3: Create destination directory  
+  # Create destination directory  
   out::message('Step 2: Creating project directory...')
   run_command("mkdir -p ${project_dest}", $targets, {
-    '_run_as' => $effective_user
+      '_run_as' => 'root'
   })
 
-  # Step 4: Copy the entire project to target servers
+  # Copy the entire project to target servers
   out::message('Step 3: Copying project files...')
   upload_file($project_source, $project_dest, $targets, {
-    '_run_as' => $effective_user
+      '_run_as' => 'root'
   })
 
-  # Step 5: Install project dependencies
-  out::message('Step 4: Installing project dependencies...')
+  # Set ownership of target directory
+  out::message('Step 4: Setting ownership of project directory...')
+  run_command("chown -R ${effective_user}:${effective_user} ${project_dest}", $targets, {
+    '_run_as' => 'root'
+  })
+
+  # Install project dependencies
+  out::message('Step 5: Installing project dependencies...')
   run_command("cd ${project_dest} && ~/.rbenv/shims/bundle install", $targets, {
-    '_run_as' => $user
+      '_run_as' => $user
   })
 
-  # Step 6: Verify the spec file exists
-  out::message('Step 5: Verifying spec file exists...')
+  # Verify the spec file exists
+  out::message('Step 6: Verifying spec file exists...')
   $spec_path = "${project_dest}/spec/localhost/${spec_file}"
   $file_check = run_command("test -f ${spec_path} && echo 'exists' || echo 'not found'", $targets)
 
@@ -70,10 +75,10 @@ plan pe_lab_tests::run_server_spec (
     }
   }
 
-  # Step 7: Run the specified spec file
-  out::message("Step 6: Running spec file: ${spec_file}...")
+  # Run the specified spec file
+  out::message("Step 7: Running spec file: ${spec_file}...")
   $spec_results = run_command("cd ${project_dest} && ~/.rbenv/shims/bundle exec rspec spec/localhost/${spec_file} --format documentation", $targets, {
-    '_run_as' => $user
+      '_run_as' => $user
   })
 
   # Step 8: Display results
