@@ -9,8 +9,6 @@
 #   The name of the spec file to run (e.g., 'puppet_server_spec.rb')
 # @param ruby_version
 #   The Ruby version to install (default: 3.2.5)
-# @param project_dest
-#   Destination directory on target server (default: /opt/pe_lab_tests)
 # @param user
 #   User to own the project files (default: current user)
 #
@@ -18,11 +16,19 @@ plan pe_lab_tests::run_server_spec (
   TargetSpec $targets,
   String $spec_file,
   String $ruby_version = '3.2.5',
-  String $project_dest = '/home/admin/pe_lab_tests',  # Changed to user home
   Optional[String] $user = undef
 ) {
+  # Determine effective user
+  $effective_user = $user ? {
+    undef   => system::env('USER'),
+    default => $user
+  }
+
   # Get the current project directory
   $project_source = system::env('PWD')
+
+  # Set the project destination directory
+  $project_dest = "/home/${effective_user}/pe_lab_tests"
 
   out::message("Running server spec: ${spec_file}")
   out::message("Ruby version: ${ruby_version}")
@@ -33,12 +39,6 @@ plan pe_lab_tests::run_server_spec (
   run_task('pe_lab_tests::install_ruby', $targets, {
       'ruby_version' => $ruby_version
   })
-
-  # Determine effective user
-  $effective_user = $user ? {
-    undef   => system::env('USER'),
-    default => $user
-  }
 
   # Create destination directory  
   out::message('Step 2: Creating project directory...')
