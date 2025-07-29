@@ -52,24 +52,24 @@ plan pe_lab_tests::run_server_spec (
 
   # Install project dependencies
   out::message('Installing project dependencies...')
-  run_command("cd ${project_dest} && ~/.rbenv/shims/bundle install", $targets, {
+  run_command("cd ${project_dest}/pe_lab_tests && ~/.rbenv/shims/bundle install", $targets, {
       '_run_as' => $user
   })
 
   # Verify the spec file exists
   out::message('Verifying spec file exists...')
-  $spec_path = "${project_dest}/../spec/localhost/${spec_file}"
+  $spec_path = "${project_dest}/pe_lab_tests/spec/localhost/${spec_file}"
   $file_check = run_command("test -f ${spec_path} && echo 'exists' || echo 'not found'", $targets)
 
   $file_check.each |$result| {
     if $result.value['stdout'].strip == 'not found' {
-      fail_plan("Spec file ${spec_file} not found at ${spec_path} on target ${result.target}")
+      fail_plan("Spec file ${spec_path} on target ${result.target}")
     }
   }
 
   # Run the specified spec file
   out::message("Running spec file: ${spec_file}...")
-  $spec_results = run_command("cd ${project_dest} && ~/.rbenv/shims/bundle exec rspec spec/localhost/${spec_file} --format documentation", $targets, {
+  $spec_results = run_command("cd ${project_dest}/pe_lab_tests && ~/.rbenv/shims/bundle exec rspec spec/localhost/${spec_file} --format documentation", $targets, {
       '_run_as' => $user
   })
 
