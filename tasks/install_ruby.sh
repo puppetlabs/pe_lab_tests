@@ -20,12 +20,12 @@ source ~/.bashrc
 git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 
 # Install Ruby (using parameter)
-time ~/.rbenv/bin/rbenv install $RUBY_VERSION
-time ~/.rbenv/bin/rbenv global $RUBY_VERSION
+~/.rbenv/bin/rbenv install $RUBY_VERSION
+~/.rbenv/bin/rbenv global $RUBY_VERSION
 
 # Install bundler
-time ~/.rbenv/shims/gem install bundler
-time ~/.rbenv/bin/rbenv rehash
+~/.rbenv/shims/gem install bundler
+~/.rbenv/bin/rbenv rehash
 
 # Verify installation
 echo "Ruby version:"
