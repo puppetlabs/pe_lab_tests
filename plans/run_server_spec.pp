@@ -67,7 +67,7 @@ plan pe_lab_tests::run_server_spec (
 
   # Verify the spec file exists
   out::message('Step 6: Verifying spec file exists...')
-  $spec_path = "${project_dest}/spec/localhost/${spec_file}"
+  $spec_path = "${project_dest}/../spec/localhost/${spec_file}"
   $file_check = run_command("test -f ${spec_path} && echo 'exists' || echo 'not found'", $targets)
 
   $file_check.each |$result| {
