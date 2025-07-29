@@ -18,7 +18,7 @@ plan pe_lab_tests::run_server_spec (
   TargetSpec $targets,
   String $spec_file,
   String $ruby_version = '3.2.5',
-  String $project_dest = '/opt/pe_lab_tests',
+  String $project_dest = '/home/admin/pe_lab_tests',  # Changed to user home
   Optional[String] $user = undef
 ) {
   # Get the current project directory
@@ -34,23 +34,24 @@ plan pe_lab_tests::run_server_spec (
     'ruby_version' => $ruby_version
   })
 
-  # Step 2: Create destination directory
+  # Step 2: Determine effective user
+  if $user {
+    $effective_user = $user
+  } else {
+    $effective_user = system::env('USER')
+  }
+
+  # Step 3: Create destination directory  
   out::message('Step 2: Creating project directory...')
-  run_command("sudo mkdir -p ${project_dest}", $targets)
+  run_command("mkdir -p ${project_dest}", $targets, {
+    '_run_as' => $effective_user
+  })
 
   # Step 4: Copy the entire project to target servers
   out::message('Step 3: Copying project files...')
   upload_file($project_source, $project_dest, $targets, {
-    '_run_as' => 'root'
+    '_run_as' => $effective_user
   })
-
-  # Step 3: Set ownership if user specified
-  if $user {
-    run_command("sudo chown -R ${user}:${user} ${project_dest}", $targets)
-  } else {
-    $user = system::env('USER')
-    run_command("sudo chown -R ${user}:${user} ${project_dest}", $targets)
-  }
 
   # Step 5: Install project dependencies
   out::message('Step 4: Installing project dependencies...')
