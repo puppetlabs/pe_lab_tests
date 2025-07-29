@@ -28,7 +28,7 @@ plan pe_lab_tests::run_server_spec (
   $project_source = system::env('PWD')
 
   # Set the project destination directory
-  $project_dest = "/home/${effective_user}/pe_lab_tests"
+  $project_dest = "/home/${effective_user}/"
 
   out::message("Running server spec: ${spec_file}")
   out::message("Ruby version: ${ruby_version}")
@@ -41,23 +41,20 @@ plan pe_lab_tests::run_server_spec (
   })
 
   # Create destination directory  
-  out::message('Step 2: Creating project directory...')
-  run_command("rm -rf ${project_dest}/*", $targets, {
-      '_run_as' => 'root'
-  })
-  run_command("mkdir -p ${project_dest}", $targets, {
+  out::message('Step 2: Cleaning target directory...')
+  run_command("rm -rf ${project_dest}/pe_lab_tests", $targets, {
       '_run_as' => 'root'
   })
 
   # Set ownership of target directory
-  out::message('Step 3: Setting ownership of project directory...')
-  run_command("chown -R ${effective_user}:${effective_user} ${project_dest}", $targets, {
-    '_run_as' => 'root'
-  })
+  # out::message('Step 3: Setting ownership of project directory...')
+  # run_command("chown -R ${effective_user}:${effective_user} ${project_dest}", $targets, {
+  #   '_run_as' => 'root'
+  # })
 
   # Copy the entire project to target servers
   out::message('Step 4: Copying project files...')
-  upload_file("${project_source}/*", $project_dest, $targets)
+  upload_file($project_source, $project_dest, $targets)
 
   # Install project dependencies
   out::message('Step 5: Installing project dependencies...')
