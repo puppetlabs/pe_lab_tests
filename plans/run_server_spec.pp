@@ -35,35 +35,35 @@ plan pe_lab_tests::run_server_spec (
   out::message("Project destination: ${project_dest}")
 
   # Install Ruby using our custom task
-  out::message("Step 1: Installing Ruby ${ruby_version}...")
+  out::message("Installing Ruby ${ruby_version}...")
   run_task('pe_lab_tests::install_ruby', $targets, {
       'ruby_version' => $ruby_version
   })
 
   # Create destination directory  
-  out::message('Step 2: Cleaning target directory...')
+  out::message('Cleaning target directory...')
   run_command("rm -rf ${project_dest}/pe_lab_tests", $targets, {
       '_run_as' => 'root'
   })
 
   # Set ownership of target directory
-  # out::message('Step 3: Setting ownership of project directory...')
+  # out::message('Setting ownership of project directory...')
   # run_command("chown -R ${effective_user}:${effective_user} ${project_dest}", $targets, {
   #   '_run_as' => 'root'
   # })
 
   # Copy the entire project to target servers
-  out::message('Step 4: Copying project files...')
+  out::message('Copying project files...')
   upload_file($project_source, $project_dest, $targets)
 
   # Install project dependencies
-  out::message('Step 5: Installing project dependencies...')
+  out::message('Installing project dependencies...')
   run_command("cd ${project_dest} && ~/.rbenv/shims/bundle install", $targets, {
       '_run_as' => $user
   })
 
   # Verify the spec file exists
-  out::message('Step 6: Verifying spec file exists...')
+  out::message('Verifying spec file exists...')
   $spec_path = "${project_dest}/../spec/localhost/${spec_file}"
   $file_check = run_command("test -f ${spec_path} && echo 'exists' || echo 'not found'", $targets)
 
@@ -74,12 +74,12 @@ plan pe_lab_tests::run_server_spec (
   }
 
   # Run the specified spec file
-  out::message("Step 7: Running spec file: ${spec_file}...")
+  out::message("Running spec file: ${spec_file}...")
   $spec_results = run_command("cd ${project_dest} && ~/.rbenv/shims/bundle exec rspec spec/localhost/${spec_file} --format documentation", $targets, {
       '_run_as' => $user
   })
 
-  # Step 8: Display results
+  # Display results
   out::message('Spec Results:')
   $spec_results.each |$result| {
     out::message("Target: ${result.target}")
