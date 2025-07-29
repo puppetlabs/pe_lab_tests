@@ -49,17 +49,15 @@ plan pe_lab_tests::run_server_spec (
       '_run_as' => 'root'
   })
 
-  # Copy the entire project to target servers
-  out::message('Step 3: Copying project files...')
-  upload_file("${project_source}/*", $project_dest, $targets, {
-      '_run_as' => 'root'
-  })
-
   # Set ownership of target directory
-  out::message('Step 4: Setting ownership of project directory...')
+  out::message('Step 3: Setting ownership of project directory...')
   run_command("chown -R ${effective_user}:${effective_user} ${project_dest}", $targets, {
     '_run_as' => 'root'
   })
+
+  # Copy the entire project to target servers
+  out::message('Step 4: Copying project files...')
+  upload_file("${project_source}/*", $project_dest, $targets)
 
   # Install project dependencies
   out::message('Step 5: Installing project dependencies...')
