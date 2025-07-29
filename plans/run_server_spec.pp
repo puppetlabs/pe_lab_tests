@@ -1,3 +1,5 @@
+# Copyright 2025. Puppet, Inc., a Perforce company.  
+# 
 # @summary Run a specific server spec on target servers
 #
 # This plan installs Ruby using rbenv, copies the entire project
