@@ -1,0 +1,19 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "A short description of this task",
+  "parameters": {
+    "ruby_version": {
+      "description": "The Ruby version to install",
+      "type": "String",
+      "default": "3.2.5"
+    }
+  },
+  "implementations": [
+    {
+      "name": "install_ruby.sh",
+      "requirements": ["shell"],
+      "os": ["linux"]
+    }
+  ]
+}
