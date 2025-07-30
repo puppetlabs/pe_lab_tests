@@ -1,117 +1,58 @@
 # pe_lab_tests
 
-Welcome to your new module. A short overview of the generated parts can be found
-in the [PDK documentation][1].
+This project contains acceptance tests for servers in TechEd PE Labs.
 
-The README template below provides a starting point with details about what
-information to include in your README.
+## Requirements
 
-## Table of Contents
+This project requires Puppet Bolt in order to run, and PDK for development.
 
-1. [Description](#description)
-1. [Setup - The basics of getting started with pe_lab_tests](#setup)
-    * [What pe_lab_tests affects](#what-pe_lab_tests-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with pe_lab_tests](#beginning-with-pe_lab_tests)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
+Execution requires a Ruby installation, which the bolt plan `pe_lab_tests::run_server_spec` will create for you on the target node.
 
-## Description
-
-Briefly tell users why they might want to use your module. Explain what your
-module does and what kind of problems users can solve with it.
-
-This should be a fairly short description helps the user decide if your module
-is what they want.
-
-## Setup
-
-### What pe_lab_tests affects **OPTIONAL**
-
-If it's obvious what your module touches, you can skip this section. For
-example, folks can probably figure out that your mysql_instance module affects
-their MySQL instances.
-
-If there's more that they should know about, though, this is the place to
-mention:
-
-* Files, packages, services, or operations that the module will alter, impact,
-  or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-another module, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you might want to include an additional "Upgrading" section here.
-
-### Beginning with pe_lab_tests
-
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most basic
-use of the module.
+SSH access to servers is required to be configured beforehand, including SSH keys.
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your
-users how to use your module to solve problems, and be sure to include code
-examples. Include three to five examples of the most important or common tasks a
-user can accomplish with your module. Show users how to accomplish more complex
-tasks that involve different types, classes, and functions working in tandem.
+### Running Server Specs with Bolt
 
-## Reference
+This project includes a Bolt plan that automates the setup and execution of server specs on remote targets.
 
-This section is deprecated. Instead, add reference information to your code as
-Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your
-module. For details on how to add code comments and generate documentation with
-Strings, see the [Puppet Strings documentation][2] and [style guide][3].
+#### Basic Usage
 
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the
-root of your module directory and list out each of your module's classes,
-defined types, facts, functions, Puppet tasks, task plans, and resource types
-and providers, along with the parameters for each.
+Run a server spec on target servers:
 
-For each element (class, defined type, function, and so on), list:
+```bash
+# Run a specific spec file on all targets in your inventory
+bolt plan run pe_lab_tests::run_server_spec spec_file=puppet_server_spec.rb --targets linux_servers
 
-* The data type, if applicable.
-* A description of what the element does.
-* Valid values, if the data type doesn't make it obvious.
-* Default value, if any.
+# Run with a specific Ruby version
+bolt plan run pe_lab_tests::run_server_spec \
+  spec_file=puppet_server_spec.rb \
+  ruby_version=3.1.4 \
+  --targets rocky8-server
 
-For example:
-
-```
-### `pet::cat`
-
-#### Parameters
-
-##### `meow`
-
-Enables vocalization in your cat. Valid options: 'string'.
-
-Default: 'medium-loud'.
+# Run as a specific user
+bolt plan run pe_lab_tests::run_server_spec \
+  spec_file=puppet_server_spec.rb \
+  user=puppet \
+  --targets production_servers
 ```
 
-## Limitations
+#### Plan Parameters
 
-In the Limitations section, list any incompatibilities, known issues, or other
-warnings.
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `spec_file` | String | *required* | Name of the spec file to run (e.g., 'puppet_server_spec.rb') |
+| `ruby_version` | String | `3.2.5` | Ruby version to install using rbenv |
+| `user` | String | `sysadmin` | User account to own the project files |
 
-## Development
+#### What the Plan Does
 
-In the Development section, tell other users the ground rules for contributing
-to your project and how they should submit their work.
+1. **Installs Ruby** - Uses rbenv to install the specified Ruby version
+2. **Copies Project** - Uploads the entire project to the target server
+3. **Installs Dependencies** - Runs `bundle install` to install required gems
+4. **Runs Specs** - Executes the specified spec file using RSpec
+5. **Reports Results** - Shows test output and exit status
 
-## Release Notes/Contributors/Etc. **Optional**
+#### Spec Files
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You can also add any additional sections you feel are
-necessary or important to include here. Please use the `##` header.
-
-[1]: https://puppet.com/docs/pdk/latest/pdk_generating_modules.html
-[2]: https://puppet.com/docs/puppet/latest/puppet_strings.html
-[3]: https://puppet.com/docs/puppet/latest/puppet_strings_style.html
+All specs run by this project are in [`spec/localhost`](spec/localhost). This is to separate serverspec tests from unit tests run with `pdk test unit`.
