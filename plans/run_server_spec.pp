@@ -22,7 +22,7 @@ plan pe_lab_tests::run_server_spec (
 ) {
   # Determine effective user
   $effective_user = $user ? {
-    undef   => system::env('USER'),
+    undef   => 'sysadmin', # Default user if not specified
     default => $user
   }
 
