@@ -61,11 +61,9 @@ plan pe_lab_tests::run_server_spec (
   # Verify the spec file exists
   out::message('Verifying spec file exists...')
   if ! $spec_file =~ /.+\.rb$/ {
-    spec_file_final = "${spec_file}.rb"
-  } else {
-    spec_file_final = $spec_file
+    fail_plan("Invalid spec file name: ${spec_file}. Must end with .rb")
   }
-  $spec_path = "${project_dest}/pe_lab_tests/spec/localhost/${spec_file_final}"
+  $spec_path = "${project_dest}/pe_lab_tests/spec/localhost/${spec_file}"
   $file_check = run_command("test -f ${spec_path} && echo 'exists' || echo 'not found'", $targets)
 
   $file_check.each |$result| {
@@ -75,8 +73,8 @@ plan pe_lab_tests::run_server_spec (
   }
 
   # Run the specified spec file
-  out::message("Running spec file: ${spec_file_final}...")
-  $spec_results = run_command("cd ${project_dest}/pe_lab_tests && ~/.rbenv/shims/bundle exec rspec spec/localhost/${spec_file_final} --format documentation", $targets, {
+  out::message("Running spec file: ${spec_file}...")
+  $spec_results = run_command("cd ${project_dest}/pe_lab_tests && ~/.rbenv/shims/bundle exec rspec spec/localhost/${spec_file} --format documentation", $targets, {
       '_run_as' => $user
   })
 
@@ -108,7 +106,7 @@ plan pe_lab_tests::run_server_spec (
 
   return {
     status              => $status,
-    spec_file           => $spec_file_final,
+    spec_file           => $spec_file,
     ruby_version        => $ruby_version,
     project_destination => $project_dest,
     targets_tested      => $targets,
