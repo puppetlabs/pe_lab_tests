@@ -60,7 +60,7 @@ plan pe_lab_tests::run_server_spec (
 
   # Verify the spec file exists
   out::message('Verifying spec file exists...')
-  if ! $spec_file =~ /.+\.rb$/ {
+  unless ($spec_file =~ /.+\.rb$/) {
     fail_plan("Invalid spec file name: ${spec_file}. Must end with .rb")
   }
   $spec_path = "${project_dest}/pe_lab_tests/spec/localhost/${spec_file}"
