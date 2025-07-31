@@ -53,6 +53,11 @@ bolt plan run pe_lab_tests::run_server_spec \
 4. **Runs Specs** - Executes the specified spec file using RSpec
 5. **Reports Results** - Shows test output and exit status
 
+⚠️ **WARNING** ⚠️
+Step 2 involves wiping out any previous copies of this project in the remote home directory in order to ensure that the latest version is used.
+
+In the special case that you are running the dev environment tests from the dev environment itself, this project will delete itself. To get around this problem, just clone to a directory other than the home directory.
+
 #### Spec Files
 
 All specs run by this project are in [`spec/localhost`](spec/localhost). This is to separate serverspec tests from unit tests run with `pdk test unit`.
